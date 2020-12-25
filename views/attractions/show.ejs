@@ -1,0 +1,60 @@
+<%- include("../partials/header") %>
+<div class="container">
+	<div class="row">
+		<div class="col-md-3">
+			<p class="lead">TripAdvisor</p>
+			<div class="list-group">
+				<li class="list-group-item active">Info</li>
+				<li class="list-group-item">Restaurant</li>
+				<li class="list-group-item">Hotel</li>
+				<li class="list-group-item">Related Link</li>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="thumbnail">
+				<img class="img-responsive" src="<%= attraction.image %>">
+				<div class="caption-full">
+					<h4 class="pull-right">$<%= attraction.price %>/night</h4>
+					<h3><a><%= attraction.name %></a></h3>
+					<p><%= attraction.description %></p>
+					<p>
+						<em>Created by <%= attraction.author.username %></em>
+					</p>
+					<% if(currentUser && attraction.author.id.equals(currentUser._id)){ %>
+						<a class="btn btn-warning" href="/attractions/<%= attraction._id %>/edit">Edit</a>
+						<form style="display: inline" action="/attractions/<%= attraction._id %>?_method=DELETE" method="POST">
+							<button class="btn btn-danger">Delete</button>
+						</form>
+					<% } %>
+				</div>
+			</div>
+			<div class="well">
+				<div class="text-right">
+					<a class="btn btn-success" href="/attractions/<%= attraction._id %>/comments/new">Add New Comment</a>
+				</div>
+				<hr>
+				<% attraction.comments.forEach(function(comment){ %>
+					<div class="row">
+						<div class="col-md-12">
+							<strong><%= comment.author.username %></strong>
+							<span class="pull-right">10 days ago</span>
+							<p>
+								<%= comment.text %>
+							</p>
+							<% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+								<a class="btn btn-warning btn-xs"
+								   href="/attractions/<%= attraction._id %>/comments/<%= comment._id %>/edit">Edit</a>
+								<form style="display: inline" 
+									  action="/attractions/<%= attraction._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+									<input type="submit" class="btn btn-danger btn-xs" value="Delete">
+								</form>
+							<% } %>
+						</div>
+					</div>
+				<% }) %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%- include("../partials/footer") %>
